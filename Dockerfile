@@ -10,3 +10,6 @@ RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
 COPY ocsp-server.py /ocsp-server.py
+
+EXPOSE 5000/tcp
+ENTRYPOINT [ "/ocsp-server.py" ]
