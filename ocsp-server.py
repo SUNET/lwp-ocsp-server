@@ -113,4 +113,4 @@ if __name__ == "__main__":
         print(f"Error connecting to MariaDB Platform: {e}")
         sys.exit(1)
 
-    app.run()
+    app.run(host="0.0.0.0")
