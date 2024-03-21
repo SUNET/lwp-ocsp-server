@@ -15,7 +15,7 @@ set -e
 
 script_name=$(basename "$0")
 project_name=$(basename "$(pwd)")
-project_name_short=$(basename "$(pwd)" | cut -d "-" -f2)
+image_name="geteduroam-ocsp"
 
 echo "running SUNET/${project_name}/${script_name}"
 
@@ -31,7 +31,7 @@ if [ "$VERSION" = "" ]; then
     VERSION=${GIT_COMMIT}
 fi
 
-BASE_TAG="docker.sunet.se/${project_name_short}"
+BASE_TAG="docker.sunet.se/${image_name}"
 DOCKER_TAG="${BASE_TAG}:${VERSION}"
 LATEST_TAG="${BASE_TAG}:latest"
 echo "${script_name}: building DOCKER_TAG ${DOCKER_TAG} ${LATEST_TAG}"
