@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 
 import mariadb
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509 import OCSPNonce, ReasonFlags, load_pem_x509_certificate, ocsp, extensions
+from cryptography.x509 import (OCSPNonce, ReasonFlags, extensions,
+                               load_pem_x509_certificate, ocsp)
 from flask import Flask, Response, request
 
 app = Flask(__name__)
