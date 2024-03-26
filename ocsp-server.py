@@ -55,7 +55,6 @@ def ocsp_server(realm):
 
         hash_algorithm = ocsp_req.hash_algorithm
         #non = ocsp_req.extensions.get_extension_for_class(OCSPNonce)
-        print(ocsp_req.serial_number)
         cur.execute(
             "select x509, revoked from realm_signing_log where realm = ? and serial = ?",
             (
