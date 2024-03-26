@@ -85,19 +85,19 @@ def ocsp_server(realm):
             )
         else:
             builder = builder.add_response(
-                    cert=cert,
-                    issuer=ca_pem,
-                    algorithm=hash_algorithm,
-                    cert_status=ocsp.OCSPCertStatus.REVOKED,
-                    this_update=datetime.now(timezone.utc),
-                    next_update=None,
-                    revocation_time=revoked,
-                    revocation_reason=ReasonFlags.unspecified,
-                )
+                cert=cert,
+                issuer=ca_pem,
+                algorithm=hash_algorithm,
+                cert_status=ocsp.OCSPCertStatus.REVOKED,
+                this_update=datetime.now(timezone.utc),
+                next_update=None,
+                revocation_time=revoked,
+                revocation_reason=ReasonFlags.unspecified,
+            )
 
         builder = builder.responder_id(ocsp.OCSPResponderEncoding.HASH, ca_pem)
         if non:
-           builder = builder.add_extension(non.value, False)
+            builder = builder.add_extension(non.value, False)
 
         # Freeradius seem to require some help in order to validate the response. openssl does not
         builder = builder.certificates([ca_pem])
