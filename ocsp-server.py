@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 import mariadb
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509 import OCSPNonce, ReasonFlags, load_pem_x509_certificate, ocsp
+from cryptography.x509 import OCSPNonce, ReasonFlags, load_pem_x509_certificate, ocsp, extensions
 from flask import Flask, Response, request
 
 app = Flask(__name__)
@@ -54,7 +54,10 @@ def ocsp_server(realm):
             )
 
         hash_algorithm = ocsp_req.hash_algorithm
-        #non = ocsp_req.extensions.get_extension_for_class(OCSPNonce)
+        try:
+            non = ocsp_req.extensions.get_extension_for_class(OCSPNonce)
+        except extensions.ExtensionNotFound:
+            non = None
         cur.execute(
             "select x509, revoked from realm_signing_log where realm = ? and serial = ?",
             (
@@ -92,8 +95,8 @@ def ocsp_server(realm):
                 )
 
         builder = builder.responder_id(ocsp.OCSPResponderEncoding.HASH, ca_pem)
-        #if non:
-        #   builder = builder.add_extension(non.value, False)
+        if non:
+           builder = builder.add_extension(non.value, False)
 
         # Freeradius seem to require some help in order to validate the response. openssl does not
         builder = builder.certificates([ca_pem])
