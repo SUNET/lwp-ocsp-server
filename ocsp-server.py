@@ -95,6 +95,9 @@ def ocsp_server(realm):
         builder = builder.responder_id(ocsp.OCSPResponderEncoding.HASH, ca_pem)
         #if non:
         #   builder = builder.add_extension(non.value, False)
+
+        # Freeradius seem to require some help in order to validate the response. openssl does not
+        builder = builder.certificates([ca_pem])
         response = builder.sign(ca_key, hashes.SHA256())
         response_bytes = response.public_bytes(serialization.Encoding.DER)
         return Response(response_bytes, mimetype="application/ocsp-response")
