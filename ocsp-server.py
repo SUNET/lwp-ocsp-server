@@ -18,20 +18,14 @@ sql_host = os.getenv("SQLHOST", "127.0.0.1")
 sql_port = os.getenv("SQLPORT", 3306)
 sql_db = os.getenv("SQLDB", "geteduroam")
 
-def connect_db():
-    try:
-        conn = mariadb.connect(
-            user=sql_user,
-            password=sql_password,
-            host=sql_host,
-            port=sql_port,
-            database=sql_db,
-        )
-    except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
 
-    return conn
+config = {
+        'host': os.getenv("SQLHOST", "127.0.0.1"),
+        'port': os.getenv("SQLPORT", 3306),
+        'user': os.getenv("SQLUSER", "AzureDiamond")
+        'password': os.getenv("SQLPASSWORD", "hunter2")
+        'database': os.getenv("SQLDB", "geteduroam")
+        }
 
 @app.route("/<realm>/", methods=["GET", "POST"])
 def ocsp_server(realm):
@@ -40,10 +34,7 @@ def ocsp_server(realm):
 
     if request.method == "POST":
 
-        try:
-            conn.ping()
-        except mariadb.InterfaceError:
-            conn = connect_db()
+        conn = mariadb.connect(**config)
 
         cur = conn.cursor()
 
@@ -87,6 +78,7 @@ def ocsp_server(realm):
         )
         cert_rows = cur.fetchall()
 
+        conn.close()
         cert = load_pem_x509_certificate(cert_rows[0][0])
         revoked = cert_rows[0][1]
 
@@ -127,7 +119,4 @@ def ocsp_server(realm):
 
 
 if __name__ == "__main__":
-
-    conn = connect_db()
-
     app.run(host="0.0.0.0")
