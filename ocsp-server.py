@@ -129,6 +129,6 @@ def ocsp_server(realm):
 
 if __name__ == "__main__":
 
-    conn = connect_db
+    conn = connect_db()
 
     app.run(host="0.0.0.0")
