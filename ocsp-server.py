@@ -26,6 +26,7 @@ def ocsp_server(realm):
 
     if request.method == "POST":
 
+        conn.ping()
         cur = conn.cursor()
 
         cur.execute(
