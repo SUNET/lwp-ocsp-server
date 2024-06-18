@@ -18,6 +18,21 @@ sql_host = os.getenv("SQLHOST", "127.0.0.1")
 sql_port = os.getenv("SQLPORT", 3306)
 sql_db = os.getenv("SQLDB", "geteduroam")
 
+def connect_db():
+    try:
+        conn = mariadb.connect(
+            user=sql_user,
+            password=sql_password,
+            host=sql_host,
+            port=sql_port,
+            database=sql_db,
+        )
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+    conn.auto_reconnect = True
+
+    return conn
 
 @app.route("/<realm>/", methods=["GET", "POST"])
 def ocsp_server(realm):
@@ -26,7 +41,11 @@ def ocsp_server(realm):
 
     if request.method == "POST":
 
-        conn.ping()
+        try:
+            conn.ping()
+        except mariadb.InterfaceError:
+            conn = connect_db()
+
         cur = conn.cursor()
 
         cur.execute(
@@ -107,19 +126,9 @@ def ocsp_server(realm):
         return Response(response_bytes, mimetype="application/ocsp-response")
 
 
+
 if __name__ == "__main__":
 
-    try:
-        conn = mariadb.connect(
-            user=sql_user,
-            password=sql_password,
-            host=sql_host,
-            port=sql_port,
-            database=sql_db,
-        )
-    except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
-        sys.exit(1)
-    conn.auto_reconnect = True
+    conn = connect_db
 
     app.run(host="0.0.0.0")
