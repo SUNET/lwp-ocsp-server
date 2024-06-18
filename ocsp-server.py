@@ -30,7 +30,6 @@ def connect_db():
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
         sys.exit(1)
-    conn.auto_reconnect = True
 
     return conn
 
