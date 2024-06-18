@@ -6,8 +6,13 @@ from datetime import datetime, timezone
 
 import mariadb
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509 import (OCSPNonce, ReasonFlags, extensions,
-                               load_pem_x509_certificate, ocsp)
+from cryptography.x509 import (
+    OCSPNonce,
+    ReasonFlags,
+    extensions,
+    load_pem_x509_certificate,
+    ocsp,
+)
 from flask import Flask, Response, request
 
 app = Flask(__name__)
@@ -20,12 +25,13 @@ sql_db = os.getenv("SQLDB", "geteduroam")
 
 
 config = {
-        'host': os.getenv("SQLHOST", "127.0.0.1"),
-        'port': os.getenv("SQLPORT", 3306),
-        'user': os.getenv("SQLUSER", "AzureDiamond"),
-        'password': os.getenv("SQLPASSWORD", "hunter2"),
-        'database': os.getenv("SQLDB", "geteduroam"),
+    "host": os.getenv("SQLHOST", "127.0.0.1"),
+    "port": os.getenv("SQLPORT", 3306),
+    "user": os.getenv("SQLUSER", "AzureDiamond"),
+    "password": os.getenv("SQLPASSWORD", "hunter2"),
+    "database": os.getenv("SQLDB", "geteduroam"),
 }
+
 
 @app.route("/<realm>/", methods=["GET", "POST"])
 def ocsp_server(realm):
@@ -115,7 +121,6 @@ def ocsp_server(realm):
         response = builder.sign(ca_key, hashes.SHA256())
         response_bytes = response.public_bytes(serialization.Encoding.DER)
         return Response(response_bytes, mimetype="application/ocsp-response")
-
 
 
 if __name__ == "__main__":
