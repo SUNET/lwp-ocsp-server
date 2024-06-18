@@ -22,10 +22,10 @@ sql_db = os.getenv("SQLDB", "geteduroam")
 config = {
         'host': os.getenv("SQLHOST", "127.0.0.1"),
         'port': os.getenv("SQLPORT", 3306),
-        'user': os.getenv("SQLUSER", "AzureDiamond")
-        'password': os.getenv("SQLPASSWORD", "hunter2")
-        'database': os.getenv("SQLDB", "geteduroam")
-        }
+        'user': os.getenv("SQLUSER", "AzureDiamond"),
+        'password': os.getenv("SQLPASSWORD", "hunter2"),
+        'database': os.getenv("SQLDB", "geteduroam"),
+}
 
 @app.route("/<realm>/", methods=["GET", "POST"])
 def ocsp_server(realm):
