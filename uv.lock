@@ -138,7 +138,7 @@ wheels = [
 [[package]]
 name = "lwp-oscp-server"
 version = "1.0.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "cryptography" },
     { name = "flask" },
