@@ -2,12 +2,9 @@ FROM python:3.12
 
 ENV PIP_INDEX_URL=https://pypi.sunet.se/simple
 
-RUN python3 -m pip install uv
 
-COPY pyproject.toml uv.lock /
-
-ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
-RUN uv sync --locked
+COPY requirements.txt /
+RUN python3 -m pip install -r /requirements.txt --require-hashes
 
 COPY ocsp-server.py /ocsp-server.py
 
