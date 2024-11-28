@@ -19,3 +19,20 @@ build-backend = "poetry.core.masonry.api"
 name = "Sunet"
 url = "https://pypi.sunet.se/simple/"
 priority = "primary"
+
+[project]
+name = "lwp-oscp-server"
+version = "1.0.0"
+description = "OCSP server to use with letswifi-portal"
+requires-python = ">=3.12,<4.0"
+authors = [
+    { name = "Johan Wassberg", email = "jocar@sunet.se" },
+]
+dependencies = [
+    "cryptography>=42.0.5,<43.0.0",
+    "Flask>=3.0.2,<4.0.0",
+    "mariadb>=1.1.10,<2.0.0",
+]
+
+[tool.uv]
+index-url = "https://pypi.sunet.se/simple/"

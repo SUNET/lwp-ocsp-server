@@ -2,12 +2,11 @@ FROM python:3.12
 
 ENV PIP_INDEX_URL=https://pypi.sunet.se/simple
 
-RUN python3 -m pip install poetry
+RUN python3 -m pip install uv
 
-COPY poetry.lock pyproject.toml /
+COPY pyproject.toml /
 
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
+RUN uv sync
 
 COPY ocsp-server.py /ocsp-server.py
 
