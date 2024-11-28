@@ -4,7 +4,7 @@ ENV PIP_INDEX_URL=https://pypi.sunet.se/simple
 
 RUN python3 -m pip install uv
 
-COPY pyproject.toml /
+COPY pyproject.toml uv.lock /
 
 ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
 RUN uv sync --locked
