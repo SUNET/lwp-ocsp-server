@@ -1,25 +1,3 @@
-[tool.poetry]
-name = 'lwp-oscp-server"'
-version = "1.0.0"
-description = "OCSP server to use with letswifi-portal"
-authors = ["Johan Wassberg <jocar@sunet.se>"]
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.12"
-cryptography = "^42.0.5"
-Flask = "^3.0.2"
-mariadb = "^1.1.10"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[[tool.poetry.source]]
-name = "Sunet"
-url = "https://pypi.sunet.se/simple/"
-priority = "primary"
-
 [project]
 name = "lwp-oscp-server"
 version = "1.0.0"
