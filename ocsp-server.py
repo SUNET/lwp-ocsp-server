@@ -51,13 +51,14 @@ def ocsp_server(realm):
 
         ca_rows = cur.fetchall()
 
+        if len(ca_rows) != 1:
+            return Response("Couldn't fetch key and pem from db", status=500)
+
         ca_key_bytes = bytes(ca_rows[0][0], "utf-8")
         ca_key = serialization.load_pem_private_key(ca_key_bytes, None)
         ca_pem_bytes = bytes(ca_rows[0][1], "utf-8")
         ca_pem = load_pem_x509_certificate(ca_pem_bytes)
 
-        if len(ca_rows) != 1:
-            return Response("Couldn't fetch key and pem from db", status=500)
         try:
             ocsp_req = ocsp.load_der_ocsp_request(request.data)
         except ValueError:
