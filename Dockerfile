@@ -7,7 +7,7 @@ RUN python3 -m pip install uv
 COPY pyproject.toml /
 
 ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
-RUN uv sync
+RUN uv sync --locked
 
 COPY ocsp-server.py /ocsp-server.py
 
