@@ -103,27 +103,36 @@ def ocsp_server(unsafe_realm):
                 ocsp.OCSPResponseStatus.MALFORMED_REQUEST
             )
             response_bytes = response.public_bytes(serialization.Encoding.DER)
+            app.logger.error("Malformed request")
             return Response(
                 response_bytes, mimetype="application/ocsp-response", status=400
             )
 
         hash_algorithm = ocsp_req.hash_algorithm
+        serial = ocsp_req.serial_number
         try:
             non = ocsp_req.extensions.get_extension_for_class(OCSPNonce)
         except extensions.ExtensionNotFound:
             non = None
+            app.logger.debug("No nonce present for this request")
+
         cur.execute(
-            "select x509, revoked from realm_signing_log where realm = ? and serial = ?",
+            "select x509, revoked, requester, sub from realm_signing_log where realm = ? and serial = ?",
             (
                 realm,
-                ocsp_req.serial_number,
+                serial,
             ),
         )
-        cert_rows = cur.fetchall()
+        app.logger.info(f"Processing certificate with serial {serial}")
+
+        cert_rows = cur.fetchone()
 
         conn.close()
         cert = load_pem_x509_certificate(cert_rows[0][0])
-        revoked = cert_rows[0][1]
+        revoked = cert_rows[1]
+        user = cert_rows[2]
+        cn = cert_rows[3]
+        not_string = " "
 
         builder = ocsp.OCSPResponseBuilder()
         if revoked is None:
@@ -148,7 +157,9 @@ def ocsp_server(unsafe_realm):
                 revocation_time=revoked,
                 revocation_reason=ReasonFlags.unspecified,
             )
+            not_string = " not "
 
+        app.logger.info(f"Certificate for {user} ({cn}) is{not_string}revoked")
         builder = builder.responder_id(ocsp.OCSPResponderEncoding.HASH, ca_pem)
         if non:
             builder = builder.add_extension(non.value, False)
