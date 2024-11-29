@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
 import mariadb
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509 import (
-    OCSPNonce,
-    ReasonFlags,
-    extensions,
-    load_pem_x509_certificate,
-    ocsp,
-)
+from cryptography.x509 import (OCSPNonce, ReasonFlags, extensions,
+                               load_pem_x509_certificate, ocsp)
 from flask import Flask, Response, request
 
 app = Flask(__name__)
@@ -33,8 +29,16 @@ config = {
 }
 
 
-@app.route("/<realm>/", methods=["GET", "POST"])
-def ocsp_server(realm):
+@app.route("/<unsafe_realm>/", methods=["GET", "POST"])
+def ocsp_server(unsafe_realm):
+
+    if re.search('[^a-z-.]',unsafe_realm):
+        message = "Bad realm"
+        app.logger.error(message)
+        return Response(message, status=500)
+    else:
+        realm = unsafe_realm
+
     if request.method == "GET":
         return f"Hello from letswifi-portal OCSP service for {realm}!"
 
