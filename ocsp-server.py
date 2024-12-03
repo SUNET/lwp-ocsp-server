@@ -171,4 +171,4 @@ def ocsp_server(unsafe_realm):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="::", port=port)
