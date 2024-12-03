@@ -127,7 +127,7 @@ def ocsp_server(unsafe_realm):
         cert_rows = cur.fetchone()
 
         conn.close()
-        cert = load_pem_x509_certificate(cert_rows[0][0])
+        cert = load_pem_x509_certificate(cert_rows[0])
         revoked = cert_rows[1]
         user = cert_rows[2]
         cn = cert_rows[3]
