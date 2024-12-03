@@ -2,7 +2,6 @@
 
 import os
 import re
-import sys
 from datetime import datetime, timezone
 
 import mariadb
