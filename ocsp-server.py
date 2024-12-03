@@ -79,7 +79,7 @@ def ocsp_server(unsafe_realm):
         else:
             message = f"No key for {realm} found in database"
             app.logger.error(message)
-            return response(message, status=500)
+            return Response(message, status=500)
 
         if ca_rows[0][1]:
             ca_pem_bytes = bytes(ca_rows[0][1], "utf-8")
@@ -92,7 +92,7 @@ def ocsp_server(unsafe_realm):
         else:
             message = f"No cert for {realm} found in database"
             app.logger.error(message)
-            return response(message, status=500)
+            return Response(message, status=500)
 
         try:
             ocsp_req = ocsp.load_der_ocsp_request(request.data)
