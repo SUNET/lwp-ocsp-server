@@ -32,7 +32,7 @@ config = {
 @app.route("/<unsafe_realm>/", methods=["GET", "POST"])
 def ocsp_server(unsafe_realm):
 
-    if re.search('[^a-z-.]',unsafe_realm):
+    if re.search('[^a-z-.0-9]',unsafe_realm):
         message = "Bad realm"
         app.logger.error(message)
         return Response(message, status=500)
