@@ -7,9 +7,9 @@ authors = [
     { name = "Johan Wassberg", email = "jocar@sunet.se" },
 ]
 dependencies = [
-    "cryptography>=42.0.5,<43.0.0",
-    "Flask>=3.0.2,<4.0.0",
-    "mariadb>=1.1.10,<2.0.0",
+    "cryptography>=42.0.5",
+    "Flask>=3.0.2",
+    "mariadb>=1.1.10",
 ]
 
 [tool.uv]
