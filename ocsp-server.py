@@ -127,13 +127,25 @@ def ocsp_server(unsafe_realm):
         cert_rows = cur.fetchone()
 
         conn.close()
+
+        builder = ocsp.OCSPResponseBuilder()
+        # Revoked or expired certificates thinned from the database
+        if cert_rows is None:
+            response = builder.build_unsuccessful(
+                ocsp.OCSPResponseStatus.UNAUTHORIZED
+            )
+            response_bytes = response.public_bytes(serialization.Encoding.DER)
+            app.logger.info(f"Non existing cert (serial {serial}). Removed?")
+            return Response(
+                response_bytes, mimetype="application/ocsp-response"
+            )
+
         cert = load_pem_x509_certificate(cert_rows[0])
         revoked = cert_rows[1]
         user = cert_rows[2]
         cn = cert_rows[3]
         not_string = " "
 
-        builder = ocsp.OCSPResponseBuilder()
         if revoked is None:
             builder = builder.add_response(
                 cert=cert,
