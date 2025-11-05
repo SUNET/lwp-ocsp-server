@@ -135,7 +135,7 @@ def ocsp_server(unsafe_realm):
                 ocsp.OCSPResponseStatus.UNAUTHORIZED
             )
             response_bytes = response.public_bytes(serialization.Encoding.DER)
-            app.logger.info(f"Non existing cert (serial {serial}). Removed?")
+            app.logger.warning(f"Non existing cert (serial {serial}). Removed?")
             return Response(
                 response_bytes, mimetype="application/ocsp-response"
             )
