@@ -144,7 +144,6 @@ def ocsp_server(unsafe_realm):
         revoked = cert_rows[1]
         user = cert_rows[2]
         cn = cert_rows[3]
-        not_string = " "
 
         if revoked is None:
             builder = builder.add_response(
@@ -157,6 +156,7 @@ def ocsp_server(unsafe_realm):
                 revocation_time=None,
                 revocation_reason=None,
             )
+            app.logger.info(f"Certificate for {user} ({cn}) is not revoked")
         else:
             builder = builder.add_response(
                 cert=cert,
@@ -168,9 +168,8 @@ def ocsp_server(unsafe_realm):
                 revocation_time=revoked,
                 revocation_reason=ReasonFlags.unspecified,
             )
-            not_string = " not "
+            app.logger.warning(f"Certificate for {user} ({cn}) is revoked")
 
-        app.logger.info(f"Certificate for {user} ({cn}) is{not_string}revoked")
         builder = builder.responder_id(ocsp.OCSPResponderEncoding.HASH, ca_pem)
         if non:
             builder = builder.add_extension(non.value, False)
